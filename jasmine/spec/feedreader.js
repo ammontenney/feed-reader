@@ -29,25 +29,25 @@ $(function() {
         /* Loop through each feed in the allFeeds object and ensure it
          * has a URL defined and that the URL is not empty.
          */
-         it('should have a URL', function(){
-             for (var i=0; i<allFeeds.length; i++){
-                 expect(typeof allFeeds[i].url).not.toBe('undefined');
-                 expect(allFeeds[i].url).toBeTruthy();
-                 expect(allFeeds[i].url.length).not.toBe(0);
-                 // TODO: verify the formatting of the URL
-             }
+        it('should have a URL', function(){
+            for (var i=0; i<allFeeds.length; i++){
+                expect(typeof allFeeds[i].url).not.toBe('undefined');
+                expect(allFeeds[i].url).toBeTruthy();
+                expect(allFeeds[i].url.length).not.toBe(0);
+                // TODO: verify the formatting of the URL
+            }
          });
 
         /* Loop through each feed in the allFeeds object and ensure it has a
          * name defined and that the name is not empty.
          */
-         it('should have a name', function(){
-             for (var i=0; i<allFeeds.length; i++){
-                 expect(typeof allFeeds[i].name).not.toBe('undefined');
-                 expect(allFeeds[i].name).toBeTruthy();
-                 expect(allFeeds[i].name.length).not.toBe(0);
-             }
-         });
+        it('should have a name', function(){
+            for (var i=0; i<allFeeds.length; i++){
+                expect(typeof allFeeds[i].name).not.toBe('undefined');
+                expect(allFeeds[i].name).toBeTruthy();
+                expect(allFeeds[i].name.length).not.toBe(0);
+            }
+        });
     });
 
 
@@ -64,42 +64,39 @@ $(function() {
          });
 
          /* Ensure the menu changes visibility when the menu icon is clicked. */
-          it('should toggle when the menu icon is clicked', function(){
-              var oldState, newState;
-              var menuIcon = $('.menu-icon-link');
+        it('should toggle when the menu icon is clicked', function(){
+            var oldState, newState;
+            var menuIcon = $('.menu-icon-link');
 
-              // With each click the results length of $('.menu-hidden') should change
-              oldState = $('.menu-hidden').length;
-              menuIcon.click();
-              newState = $('.menu-hidden').length;
-              expect(newState).not.toBe(oldState);
+            // With each click the results length of $('.menu-hidden') should change
+            oldState = $('.menu-hidden').length;
+            menuIcon.click();
+            newState = $('.menu-hidden').length;
+            expect(newState).not.toBe(oldState);
 
-              oldState = newState;
-              menuIcon.click();
-              newState = $('.menu-hidden').length;
-              expect(newState).not.toBe(oldState);
-          });
+            oldState = newState;
+            menuIcon.click();
+            newState = $('.menu-hidden').length;
+            expect(newState).not.toBe(oldState);
+        });
     });
 
 
 
     /* This suite tests that loadFeed() correctly loads and populates feed entries */
     describe('Initial Entries', function(){
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
+        /* Ensure that when the loadFeed function is called and completes its
+         * work, there is at least a single .entry element within the .feed container.
          */
         beforeEach(function(done){
             $('.feed').html('');
             loadFeed(0, done);
         });
 
-        it('should show 1 or more entries', function(done){
-            var entries = $('.feed').find('.entry');
+        it('should show 1 or more entries', function(){
+            var entries = $('.feed .entry');
             expect(entries.length).toBeGreaterThan(0);
-            done();
+
         });
      });
 
@@ -110,16 +107,22 @@ $(function() {
         /* Ensure when a new feed is loaded by the loadFeed function that the
          * content actually changes.
          */
-         var oldContent = '';
-         beforeEach(function(done){
-             oldContent = $('.feed').html();
-             loadFeed(2, done);
-         });
+        var oldContent = '';
+        beforeEach(function(done){
+            loadFeed(1, callBack(done));
+        });
 
-         it('should show new feed results', function(done){
-             var newContent = $('.feed').html();
-             expect(newContent).not.toEqual(oldContent);
-             done();
-         });
+        function callBack(done){
+            return function() {
+                oldContent = $('.feed').html();
+                loadFeed(2, done);
+            };
+        }
+
+        it('should show new feed results', function(){
+            var newContent = $('.feed').html();
+            expect(newContent).not.toEqual(oldContent);
+        });
     });
+
 }());
